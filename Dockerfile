@@ -10,7 +10,8 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o /out/app .
+# 移除 GOARCH 硬编码，让构建系统根据目标平台自动选择架构
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /out/app .
 
 # ---- run stage ----
 FROM ubuntu:22.04
@@ -26,11 +27,17 @@ RUN apt-get update && apt-get install -y ca-certificates wget gnupg && \
     sed -i 's|http://archive.ubuntu.com|https://mirrors.aliyun.com|g' /etc/apt/sources.list && \
     sed -i 's|http://security.ubuntu.com|https://mirrors.aliyun.com|g' /etc/apt/sources.list
 
-# 2. 添加 Google Chrome APT 源并安装 Chrome（更稳定的无头浏览器）
-RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/googlechrome-linux-keyring.gpg && \
-    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/googlechrome-linux-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
+# 2. 根据架构安装不同的浏览器
+# amd64: 安装 Google Chrome（官方支持）
+# arm64: 只安装依赖库，go-rod 会自动下载 Chromium
+RUN TARGETARCH=$(dpkg --print-architecture) && \
+    if [ "$TARGETARCH" = "amd64" ]; then \
+    wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/googlechrome-linux-keyring.gpg && \
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/googlechrome-linux-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list; \
+    fi
 
-# 3. 安装 Google Chrome + 依赖（无头模式运行 rod）
+# 3. 安装浏览器依赖库
+# amd64 会同时安装 Google Chrome，arm64 只安装依赖
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     fonts-liberation \
@@ -68,7 +75,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     lsb-release \
     wget \
     xdg-utils \
-    google-chrome-stable \
+    $(dpkg --print-architecture | grep -q amd64 && echo "google-chrome-stable" || echo "") \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /out/app .
@@ -77,10 +84,14 @@ COPY --from=builder /out/app .
 RUN mkdir -p /app/images && \
     chmod 777 /app/images
 
-# 5. 设置默认 Chrome 路径（rod 会用）
-ENV ROD_BROWSER_BIN=/usr/bin/google-chrome
+# 5. 仅在 amd64 架构下设置 Chrome 路径
+# arm64 不设置，让 go-rod 自动下载 Chromium
+RUN TARGETARCH=$(dpkg --print-architecture) && \
+    if [ "$TARGETARCH" = "amd64" ]; then \
+    echo "export ROD_BROWSER_BIN=/usr/bin/google-chrome" >> /etc/environment; \
+    fi
 
-EXPOSE 18060
+EXPOSE 9000
 
 CMD ["./app"]
 

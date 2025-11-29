@@ -83,6 +83,6 @@ RUN mkdir -p /app/images && \
 # go-rod 会自动检测并下载适合 ARM64 架构的 Chromium 浏览器
 # Chromium 下载源：https://playwright.azureedge.net/builds/chromium/
 
-EXPOSE 18060
+EXPOSE 9000
 
 CMD ["./app"]

@@ -352,7 +352,7 @@ Docker 版本会自动：
 - 配置 Chrome 浏览器和中文字体
 - 挂载 `./data` 用于存储 cookies
 - 挂载 `./images` 用于存储发布的图片
-- 暴露 18060 端口供 MCP 连接
+- 暴露 9000 端口供 MCP 连接
 
 详细使用说明请参考：[Docker 部署指南](./docker/README.md)
 
@@ -409,7 +409,7 @@ npx @modelcontextprotocol/inspector
 
 ![运行 Inspector](./assets/run_inspect.png)
 
-运行后，打开红色标记的链接，配置 MCP inspector，输入 `http://localhost:18060/mcp` ，点击 `Connect` 按钮。
+运行后，打开红色标记的链接，配置 MCP inspector，输入 `http://localhost:9000/mcp` ，点击 `Connect` 按钮。
 
 ![配置 MCP inspector](./assets/inspect_mcp.png)
 
@@ -449,13 +449,13 @@ go run .
 go run . -headless=false
 ```
 
-服务将运行在：`http://localhost:18060/mcp`
+服务将运行在：`http://localhost:9000/mcp`
 
 #### 验证服务状态
 
 ```bash
 # 测试 MCP 连接
-curl -X POST http://localhost:18060/mcp \
+curl -X POST http://localhost:9000/mcp \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"initialize","params":{},"id":1}'
 ```
@@ -464,7 +464,7 @@ curl -X POST http://localhost:18060/mcp \
 
 ```bash
 # 添加 HTTP MCP 服务器
-claude mcp add --transport http xiaohongshu-mcp http://localhost:18060/mcp
+claude mcp add --transport http xiaohongshu-mcp http://localhost:9000/mcp
 
 # 检查 MCP 是否添加成功（确保 MCP 已经启动的前提下，运行下面命令）
 claude mcp list
@@ -479,7 +479,7 @@ claude mcp list
 
 ```bash
 # 添加 HTTP MCP 服务器
-claude mcp add --transport http xiaohongshu-mcp http://localhost:18060/mcp
+claude mcp add --transport http xiaohongshu-mcp http://localhost:9000/mcp
 
 # 检查 MCP 是否添加成功（确保 MCP 已经启动的前提下，运行下面命令）
 claude mcp list
@@ -501,7 +501,7 @@ claude mcp list
 {
   "mcpServers": {
     "xiaohongshu-mcp": {
-      "url": "http://localhost:18060/mcp",
+      "url": "http://localhost:9000/mcp",
       "description": "小红书内容发布服务 - MCP Streamable HTTP"
     }
   }
@@ -538,7 +538,7 @@ claude mcp list
 1. 按 `Ctrl/Cmd + Shift + P` 打开命令面板
 2. 运行 `MCP: Add Server` 命令
 3. 选择 `HTTP` 方式。
-4. 输入地址： `http://localhost:18060/mcp`，或者修改成对应的 Server 地址。
+4. 输入地址： `http://localhost:9000/mcp`，或者修改成对应的 Server 地址。
 5. 输入 MCP 名字： `xiaohongshu-mcp`。
 
 #### 方法二：直接编辑配置文件
@@ -550,7 +550,7 @@ claude mcp list
 {
   "servers": {
     "xiaohongshu-mcp": {
-      "url": "http://localhost:18060/mcp",
+      "url": "http://localhost:9000/mcp",
       "type": "http"
     }
   },
@@ -582,7 +582,7 @@ claude mcp list
 {
   "mcpServers": {
     "xiaohongshu": {
-      "httpUrl": "http://localhost:18060/mcp",
+      "httpUrl": "http://localhost:9000/mcp",
       "timeout": 30000
     }
   }
@@ -602,7 +602,7 @@ claude mcp list
 # 启动 MCP Inspector
 npx @modelcontextprotocol/inspector
 
-# 在浏览器中连接到：http://localhost:18060/mcp
+# 在浏览器中连接到：http://localhost:9000/mcp
 ```
 
 使用步骤：
@@ -625,7 +625,7 @@ Cline 是一个强大的 AI 编程助手，支持 MCP 协议集成。
 ```json
 {
   "xiaohongshu-mcp": {
-    "url": "http://localhost:18060/mcp",
+    "url": "http://localhost:9000/mcp",
     "type": "streamableHttp",
     "autoApprove": [],
     "disabled": false
@@ -635,7 +635,7 @@ Cline 是一个强大的 AI 编程助手，支持 MCP 协议集成。
 
 #### 使用步骤
 
-1. 确保小红书 MCP 服务正在运行（`http://localhost:18060/mcp`）
+1. 确保小红书 MCP 服务正在运行（`http://localhost:9000/mcp`）
 2. 在 Cline 中打开 MCP 设置
 3. 添加上述配置到 MCP 服务器列表
 4. 保存配置并重启 Cline
@@ -669,14 +669,14 @@ Cline 是一个强大的 AI 编程助手，支持 MCP 协议集成。
 <details>
 <summary><b>其他支持 HTTP MCP 的客户端</b></summary>
 
-任何支持 HTTP MCP 协议的客户端都可以连接到：`http://localhost:18060/mcp`
+任何支持 HTTP MCP 协议的客户端都可以连接到：`http://localhost:9000/mcp`
 
 基本配置模板：
 
 ```json
 {
   "name": "xiaohongshu-mcp",
-  "url": "http://localhost:18060/mcp",
+  "url": "http://localhost:9000/mcp",
   "type": "http"
 }
 ```
@@ -768,10 +768,10 @@ Cline 是一个强大的 AI 编程助手，支持 MCP 协议集成。
 
 ---
 
-**Q:** 使用 `http://localhost:18060/mcp` 进行 MCP 验证时提示无法连接？  
+**Q:** 使用 `http://localhost:9000/mcp` 进行 MCP 验证时提示无法连接？  
 **A:**  
 - 在 **Docker 环境** 下，请使用  
-  👉 [http://host.docker.internal:18060/mcp](http://host.docker.internal:18060/mcp)  
+  👉 [http://host.docker.internal:9000/mcp](http://host.docker.internal:9000/mcp)  
 - 在 **非 Docker 环境** 下，请使用 **本机 IPv4 地址** 访问。
 
 ---

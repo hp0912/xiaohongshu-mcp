@@ -52,7 +52,7 @@ go run . -headless=false
    - 配置以下信息：
       * 名称: xiaohongshu-mcp
       * 类型: streamableHttp
-      * URL: http://localhost:18060/mcp
+      * URL: http://localhost:9000/mcp
    - 点击 "保存" 按钮
    - 点击启用开关
 

@@ -61,7 +61,7 @@ macOS（Desktop）的路径：
   "mcpServers": {
     "xiaohongshu-mcp": {
       "type": "streamable",
-      "url": "http://127.0.0.1:18060/mcp"
+      "url": "http://127.0.0.1:9000/mcp"
     }
   }
 }

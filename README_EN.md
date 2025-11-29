@@ -353,7 +353,7 @@ The Docker version automatically:
 - Configures Chrome browser and Chinese fonts
 - Mounts `./data` for storing cookies
 - Mounts `./images` for storing publish images
-- Exposes port 18060 for MCP connection
+- Exposes port 9000 for MCP connection
 
 For detailed instructions, please refer to: [Docker Deployment Guide](./docker/README.md)
 
@@ -410,7 +410,7 @@ npx @modelcontextprotocol/inspector
 
 ![Run Inspector](./assets/run_inspect.png)
 
-After running, open the red-marked link, configure MCP inspector, enter `http://localhost:18060/mcp`, and click the `Connect` button.
+After running, open the red-marked link, configure MCP inspector, enter `http://localhost:9000/mcp`, and click the `Connect` button.
 
 ![Configure MCP inspector](./assets/inspect_mcp.png)
 
@@ -450,13 +450,13 @@ go run .
 go run . -headless=false
 ```
 
-Service will run at: `http://localhost:18060/mcp`
+Service will run at: `http://localhost:9000/mcp`
 
 #### Verify Service Status
 
 ```bash
 # Test MCP connection
-curl -X POST http://localhost:18060/mcp \
+curl -X POST http://localhost:9000/mcp \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"initialize","params":{},"id":1}'
 ```
@@ -465,7 +465,7 @@ curl -X POST http://localhost:18060/mcp \
 
 ```bash
 # Add HTTP MCP server
-claude mcp add --transport http xiaohongshu-mcp http://localhost:18060/mcp
+claude mcp add --transport http xiaohongshu-mcp http://localhost:9000/mcp
 ```
 
 ### 2.2. Supported Clients
@@ -477,7 +477,7 @@ Official command line tool, already shown in the quick start section above:
 
 ```bash
 # Add HTTP MCP server
-claude mcp add --transport http xiaohongshu-mcp http://localhost:18060/mcp
+claude mcp add --transport http xiaohongshu-mcp http://localhost:9000/mcp
 ```
 
 </details>
@@ -496,7 +496,7 @@ Create `.cursor/mcp.json` in project root directory:
 {
   "mcpServers": {
     "xiaohongshu-mcp": {
-      "url": "http://localhost:18060/mcp",
+      "url": "http://localhost:9000/mcp",
       "description": "RedNote content publishing service - MCP Streamable HTTP"
     }
   }
@@ -533,7 +533,7 @@ Call MCP tools: (using check login status as example)
 1. Press `Ctrl/Cmd + Shift + P` to open command palette
 2. Run `MCP: Add Server` command
 3. Select `HTTP` method.
-4. Enter address: `http://localhost:18060/mcp`, or modify to corresponding Server address.
+4. Enter address: `http://localhost:9000/mcp`, or modify to corresponding Server address.
 5. Enter MCP name: `xiaohongshu-mcp`.
 
 #### Method 2: Direct Configuration File Edit
@@ -545,7 +545,7 @@ Create `.vscode/mcp.json` in project root directory:
 {
   "servers": {
     "xiaohongshu-mcp": {
-      "url": "http://localhost:18060/mcp",
+      "url": "http://localhost:9000/mcp",
       "type": "http"
     }
   },
@@ -577,7 +577,7 @@ Configure in `~/.gemini/settings.json` or project directory `.gemini/settings.js
 {
   "mcpServers": {
     "xiaohongshu": {
-      "httpUrl": "http://localhost:18060/mcp",
+      "httpUrl": "http://localhost:9000/mcp",
       "timeout": 30000
     }
   }
@@ -597,7 +597,7 @@ Debug tool for testing MCP connections:
 # Start MCP Inspector
 npx @modelcontextprotocol/inspector
 
-# Connect in browser to: http://localhost:18060/mcp
+# Connect in browser to: http://localhost:9000/mcp
 ```
 
 Usage steps:
@@ -620,7 +620,7 @@ Add the following configuration to Cline's MCP settings:
 ```json
 {
   "xiaohongshu-mcp": {
-    "url": "http://localhost:18060/mcp",
+    "url": "http://localhost:9000/mcp",
     "type": "streamableHttp",
     "autoApprove": [],
     "disabled": false
@@ -630,7 +630,7 @@ Add the following configuration to Cline's MCP settings:
 
 #### Usage Steps
 
-1. Ensure RedNote MCP service is running (`http://localhost:18060/mcp`)
+1. Ensure RedNote MCP service is running (`http://localhost:9000/mcp`)
 2. Open MCP settings in Cline
 3. Add the above configuration to the MCP server list
 4. Save configuration and restart Cline
@@ -664,14 +664,14 @@ Search for content about "food" on RedNote
 <details>
 <summary><b>Other HTTP MCP Supporting Clients</b></summary>
 
-Any client supporting HTTP MCP protocol can connect to: `http://localhost:18060/mcp`
+Any client supporting HTTP MCP protocol can connect to: `http://localhost:9000/mcp`
 
 Basic configuration template:
 
 ```json
 {
   "name": "xiaohongshu-mcp",
-  "url": "http://localhost:18060/mcp",
+  "url": "http://localhost:9000/mcp",
   "type": "http"
 }
 ```
